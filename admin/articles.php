@@ -7,72 +7,69 @@ $status = isset($_GET['status']) && $_GET['status'] !== '' ? intval($_GET['statu
 $category_id = isset($_GET['category_id']) && $_GET['category_id'] !== '' ? intval($_GET['category_id']) : null;
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $per_page = 10; // Số bài viết mỗi trang
+$offset = ($page - 1) * $per_page;
+
 // Lấy tất cả danh mục
-$stmt = $conn->query("SELECT id, name FROM categories ORDER BY name");
-$sql = "SELECT * FROM articles";
-$result = mysqli_query($conn, $sql);
+$category_result = $conn->query("SELECT id, name FROM categories ORDER BY name");
 
-if (!$result) {
-    die("Lỗi truy vấn: " . mysqli_error($conn));
-}
-
-$articles = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $articles[] = $row;
-}
-
-
-
-
-// Điều kiện WHERE
+// WHERE điều kiện và giá trị
 $where = [];
-$params = [];
+$types = '';
+$values = [];
 
 if (!empty($search)) {
-    $where[] = "(title LIKE :search OR content LIKE :search OR author LIKE :search)";
-    $params[':search'] = "%$search%";
+    $where[] = "(title LIKE ? OR content LIKE ? OR author LIKE ?)";
+    $types .= 'sss';
+    $search_val = "%$search%";
+    array_push($values, $search_val, $search_val, $search_val);
 }
-
 if ($status !== null) {
-    $where[] = "status = :status";
-    $params[':status'] = $status;
+    $where[] = "status = ?";
+    $types .= 'i';
+    $values[] = $status;
 }
 if ($category_id !== null) {
-    $where[] = "category_id = :category_id";
-    $params[':category_id'] = $category_id;
+    $where[] = "category_id = ?";
+    $types .= 'i';
+    $values[] = $category_id;
 }
-
 
 $where_clause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
 // Lấy tổng số bài viết
-$stmt = $conn->prepare("SELECT COUNT(*) FROM articles $where_clause");
-foreach ($params as $key => $value) {
-    $stmt->bindValue($key, $value);
+$sql_count = "SELECT COUNT(*) FROM articles $where_clause";
+$stmt = $conn->prepare($sql_count);
+if (!empty($values)) {
+    $stmt->bind_param($types, ...$values);
 }
 $stmt->execute();
-$total_articles = $stmt->fetchColumn();
+$stmt->bind_result($total_articles);
+$stmt->fetch();
+$stmt->close();
+
 $total_pages = ceil($total_articles / $per_page);
 
 // Lấy danh sách bài viết
-$offset = ($page - 1) * $per_page;
 $sql = "SELECT a.id, a.title, a.author, a.status, a.cover_image, a.created_at, a.updated_at, c.name AS category_name
         FROM articles a
         LEFT JOIN categories c ON a.category_id = c.id
-        $where_clause 
-        ORDER BY a.created_at DESC 
-        LIMIT :offset, :per_page";
+        $where_clause
+        ORDER BY a.created_at DESC
+        LIMIT ?, ?";
 
+// Thêm offset và per_page vào values
+$types_with_limit = $types . 'ii';
+$values_with_limit = array_merge($values, [$offset, $per_page]);
 
 $stmt = $conn->prepare($sql);
-foreach ($params as $key => $value) {
-    $stmt->bindValue($key, $value);
-}
-$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt->bindValue(':per_page', $per_page, PDO::PARAM_INT);
+$stmt->bind_param($types_with_limit, ...$values_with_limit);
 $stmt->execute();
-$articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$result = $stmt->get_result();
+$articles = $result->fetch_all(MYSQLI_ASSOC);
+
+$stmt->close();
 ?>
+
 
 
 
@@ -309,14 +306,22 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 function get_count_by_status($status)
 {
     global $conn;
+
     if ($status === null) {
         $stmt = $conn->query("SELECT COUNT(*) FROM articles");
+        $row = $stmt->fetch_row();
+        return $row[0];
     } else {
         $stmt = $conn->prepare("SELECT COUNT(*) FROM articles WHERE status = ?");
-        $stmt->execute([$status]);
+        $stmt->bind_param("i", $status);
+        $stmt->execute();
+        $stmt->bind_result($count);
+        $stmt->fetch();
+        $stmt->close();
+        return $count;
     }
-    return $stmt->fetchColumn();
 }
+
 
 
 function build_query_string($new_params = [])

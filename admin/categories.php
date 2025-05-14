@@ -3,15 +3,26 @@ include('../includes/db.php');
 include('sidebar.php');
 
 // Xử lý thêm danh mục nếu có POST
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['category_name'])) {
-    $name = mysqli_real_escape_string($conn, $_POST['category_name']);
-    $query = "INSERT INTO categories (name) VALUES ('$name')";
-    mysqli_query($conn, $query);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Thêm danh mục
+    if (isset($_POST['category_name'])) {
+        $name = mysqli_real_escape_string($conn, $_POST['category_name']);
+        $query = "INSERT INTO categories (name) VALUES ('$name')";
+        mysqli_query($conn, $query);
+    }
+
+    // Xóa danh mục
+    if (isset($_POST['delete_category'])) {
+        $category_id = intval($_POST['category_id']);
+        $query = "DELETE FROM categories WHERE id = $category_id";
+        mysqli_query($conn, $query);
+    }
 }
 
 // Truy vấn danh mục hiện có
 $result = mysqli_query($conn, "SELECT * FROM categories ORDER BY id DESC");
 ?>
+
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -21,24 +32,28 @@ $result = mysqli_query($conn, "SELECT * FROM categories ORDER BY id DESC");
     <title>Quản lý danh mục</title>
     <link rel="stylesheet" href="../assets/css/dashboard.css">
     <style>
+        /* Bố cục container */
         .container {
             display: flex;
+            gap: 20px;
             padding: 20px;
         }
 
-        .sidebar {
-            width: 20%;
-        }
+        /* Sidebar */
 
+
+        /* Nội dung chính (content) */
         .content {
-            width: 80%;
-            display: flex;
-            gap: 20px;
+            margin-left: 270px;
+            /* Tạo khoảng cách cho sidebar */
+            width: calc(100% - 270px);
+            /* Đảm bảo nội dung còn lại sau sidebar */
+            padding: 20px;
         }
 
+        /* Các phần của form và danh sách */
         .form-section,
         .list-section {
-            width: 50%;
             background: #f9f9f9;
             padding: 20px;
             border-radius: 8px;
@@ -48,6 +63,7 @@ $result = mysqli_query($conn, "SELECT * FROM categories ORDER BY id DESC");
             margin-top: 0;
         }
 
+        /* Table danh mục */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -60,6 +76,7 @@ $result = mysqli_query($conn, "SELECT * FROM categories ORDER BY id DESC");
             border: 1px solid #ccc;
         }
 
+        /* Input text và submit */
         input[type="text"] {
             width: 100%;
             padding: 8px;
@@ -70,50 +87,71 @@ $result = mysqli_query($conn, "SELECT * FROM categories ORDER BY id DESC");
         input[type="submit"] {
             padding: 8px 16px;
         }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
-        <div class="sidebar">
-            <?php include('sidebar.php'); ?>
+    <!-- Content -->
+    <div class="content">
+        <!-- Form thêm danh mục -->
+        <div class="form-section">
+            <h2>Thêm danh mục</h2>
+            <form method="POST">
+                <label for="category_name">Tên danh mục:</label>
+                <input type="text" id="category_name" name="category_name" required>
+                <input type="submit" value="Thêm">
+            </form>
         </div>
 
-        <div class="content">
-            <!-- Form thêm danh mục -->
-            <div class="form-section">
-                <h2>Thêm danh mục</h2>
-                <form method="POST">
-                    <label for="category_name">Tên danh mục:</label>
-                    <input type="text" id="category_name" name="category_name" required>
-                    <input type="submit" value="Thêm">
-                </form>
-            </div>
-
-            <!-- Danh sách danh mục -->
-            <div class="list-section">
-                <h2>Danh sách danh mục</h2>
-                <table>
-                    <thead>
+        <!-- Danh sách danh mục -->
+        <div class="list-section">
+            <h2>Danh sách danh mục</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên danh mục</th>
+                        <th>Hành động</th> <!-- Thêm cột Hành động -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
-                            <th>ID</th>
-                            <th>Tên danh mục</th>
+                            <td><?= $row['id'] ?></td>
+                            <td><?= htmlspecialchars($row['name']) ?></td>
+                            <td>
+                                <form action="categories.php" method="POST" style="display:inline;">
+                                    <input type="hidden" name="category_id" value="<?= $row['id'] ?>">
+                                    <button type="submit" name="delete_category" class="btn btn-danger">Xóa</button>
+                                </form>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                            <tr>
-                                <td><?= $row['id'] ?></td>
-                                <td><?= htmlspecialchars($row['name']) ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
-            </div>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
         </div>
-    </div>
 
+    </div>
+    </div>
 </body>
 
 </html>
