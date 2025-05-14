@@ -1,0 +1,251 @@
+/* Căn chỉnh phần thông tin trên header */
+.header-info {
+  font-size: 14px; /* Kích thước chữ nhỏ hơn */
+  line-height: 1.5; /* Khoảng cách dòng */
+}
+
+/* Tùy chỉnh liên kết "Liên hệ" */
+.header-info a {
+  color: #007bff; /* Màu xanh Bootstrap */
+  font-weight: bold; /* Chữ đậm */
+  text-decoration: none; /* Bỏ gạch chân */
+}
+
+.header-info a:hover {
+  text-decoration: underline; /* Gạch chân khi hover */
+}
+
+/* Giao diện tối */
+body.dark-theme {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark-theme .bg-light {
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+}
+
+body.dark-theme a {
+  color: #ffffff;
+}
+
+body.dark-theme .navbar-light {
+  background-color: #1e1e1e !important;
+  border-color: #333 !important;
+}
+
+/* Chế độ sáng (mặc định) */
+body {
+  background-color: #3487b6; /* Màu nền xanh */
+  margin: 0;
+  padding: 0;
+  color: #000000;
+}
+
+body .navbar {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.navbar {
+  background-color: #f8f9fa; /* Màu xám nhạt */
+  color: #212529; /* Màu chữ tối */
+}
+
+.navbar a.nav-link {
+  color: #212529; /* Màu chữ cho các liên kết */
+}
+
+.navbar a.nav-link:hover {
+  color: #007bff; /* Màu xanh khi hover */
+}
+
+/* Chế độ tối */
+body.dark-theme .navbar {
+  background-color: #343a40; /* Màu tối */
+  color: #ffffff; /* Màu chữ sáng */
+}
+
+body.dark-theme .navbar a.nav-link {
+  color: #ffffff; /* Màu chữ sáng cho các liên kết */
+}
+
+body.dark-theme .navbar a.nav-link:hover {
+  color: #ffc107; /* Màu vàng khi hover */
+}
+
+.navbar {
+  background-color: #333;
+  padding: 10px 0;
+  position: relative;
+}
+
+.navbar-toggle {
+  display: none;
+  background-color: #333;
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.navbar-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-list li {
+  margin: 0 15px;
+}
+
+.navbar-list a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.navbar-list a:hover {
+  color: #ddd;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .navbar-list {
+    display: none;
+    flex-direction: column;
+    background-color: #333;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-list.expanded {
+    display: flex;
+  }
+
+  .navbar-toggle {
+    display: block;
+  }
+
+  .navbar-collapse {
+    display: none !important;
+  }
+
+  .navbar-toggler {
+    display: inline-block;
+  }
+
+  #theme-toggle {
+    margin-right: 10px;
+  }
+}
+
+/* Hiển thị menu đầy đủ khi nhấn nút toggle */
+.navbar-collapse.show {
+  display: block !important;
+}
+
+.logo {
+  width: 500px; /* Hoặc kích thước mong muốn */
+  height: auto;
+  max-width: 100%;
+  display: block;
+  /* object-fit: contain; Đảm bảo hình ảnh không bị méo */
+  max-width: 150px; /* Điều chỉnh kích thước logo nếu cần */
+}
+
+.text-muted.fw-bold {
+  font-size: 14px; /* Đặt kích thước chữ */
+  color: #6c757d; /* Màu chữ */
+  display: block; /* Đảm bảo hiển thị */
+}
+
+/* Dark theme styles */
+body.dark-theme {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark-theme header {
+  background-color: #1e1e1e;
+}
+
+body.dark-theme .btn-outline-light {
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+body.dark-theme .btn-outline-light:hover {
+  background-color: #ffffff;
+  color: #121212;
+}
+
+/* Căn nút theme-toggle sang bên phải */
+#theme-toggle {
+  margin-left: auto; /* Đẩy nút sang bên phải */
+}
+
+#theme-toggle,
+.btn-outline-light {
+  opacity: 1 !important; /* Đảm bảo biểu tượng luôn hiển thị */
+  visibility: visible !important; /* Đảm bảo biểu tượng không bị ẩn */
+  display: inline-flex !important; /* Đảm bảo biểu tượng được hiển thị */
+  transition: none !important; /* Loại bỏ hiệu ứng chuyển đổi nếu có */
+}
+
+#theme-icon,
+.fas.fa-user {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.form-control {
+  max-width: 100%; /* Đảm bảo input không bị giới hạn chiều rộng */
+}
+
+.btn-outline-light i {
+  visibility: visible; /* Đảm bảo biểu tượng luôn hiển thị */
+  opacity: 1; /* Đảm bảo biểu tượng không bị mờ */
+}
+
+.btn-outline-light:hover i {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Div lớn chứa toàn bộ nội dung */
+.content-wrapper {
+  background-color: white;
+  margin: 50px;
+  padding: 0;
+  border-radius: 8px;
+}
+
+.footer {
+  background-color: #fcf8f6; /* Màu nền trắng */
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #ddd; /* Đường viền trên để phân cách */
+}
+
+.container {
+  background-color: #fcf8f6; /* Màu nền trắng cho nội dung */
+}

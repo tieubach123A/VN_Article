@@ -1,0 +1,164 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+}
+
+/* Optional: Style for the time text */
+header .time {
+    font-size: 1rem;
+    color: #fff;
+}
+
+main {
+    padding: 1rem;
+}
+
+.stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-item {
+    background: #fff;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    flex: 1;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+table th,
+table td {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th {
+    background-color: #f4f4f4;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #333;
+    color: #fff;
+    margin-top: 2rem;
+}
+
+.time-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #333;
+}
+
+nav form {
+    display: flex;
+    align-items: center;
+}
+
+nav form input[type="search"] {
+    width: 200px;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    outline: none;
+}
+
+nav form button {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    margin-left: -40px;
+    cursor: pointer;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+}
+
+.navbar .menu {
+    display: flex;
+    gap: 1rem;
+}
+
+.navbar .menu a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.navbar .menu a:hover {
+    text-decoration: underline;
+}
+
+.navbar .toggle-menu {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.navbar .time-icon {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navbar .time-icon .time {
+    font-size: 1rem;
+}
+
+.navbar .time-icon .theme-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .navbar .menu {
+        display: none;
+        flex-direction: column;
+        background-color: #333;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .navbar .menu.show {
+        display: flex;
+    }
+
+    .navbar .toggle-menu {
+        display: block;
+    }
+}
